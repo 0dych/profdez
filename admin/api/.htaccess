@@ -1,0 +1,4 @@
+Options -Indexes
+<FilesMatch "^(auth-helpers|storage|admin-credentials|telegram-config)\.php$">
+  Require all denied
+</FilesMatch>

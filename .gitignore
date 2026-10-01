@@ -1,0 +1,11 @@
+/private-audit/
+/dist/
+/node_modules/
+/admin/private/*
+!/admin/private/.htaccess
+/admin/api/telegram-config.php
+/data/orders.json
+*.log
+.env
+.env.*
+!.env.example

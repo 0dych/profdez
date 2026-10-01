@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Дозволяємо доступ до стилів, скриптів та зображень для Googlebot
+Allow: /css/
+Allow: /js/
+Allow: /img/
+Allow: /logo.png
+Allow: /sert1.jpg
+Allow: /sert2.jpg
+
+# Закриваємо службові та технічні директорії
+Disallow: /admin/
+Disallow: /data/
+Disallow: /scratch/
+Disallow: /*.php$
+Disallow: /*.json$
+
+# Карта сайту
+Sitemap: https://nemyo.com.ua/sitemap.xml

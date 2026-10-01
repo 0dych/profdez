@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- 1. Головна сторінка -->
+  <url>
+    <loc>https://nemyo.com.ua/</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/logo.png</image:loc>
+      <image:title>ТОВ ПРОФДЕЗІНФЕКЦІЯ ЗАКАРПАТТЯ — Офіційна санітарна служба</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/og-image.jpg</image:loc>
+      <image:title>Дезінфекція, дезінсекція, дератизація та асенізація в Мукачеві та Закарпатті</image:title>
+    </image:image>
+  </url>
+
+  <!-- 2. Каталог послуг -->
+  <url>
+    <loc>https://nemyo.com.ua/services.html</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-deratization.jpg</image:loc>
+      <image:title>Дератизація — Знищення щурів та мишей у Закарпатті</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-deratization-rodents.jpg</image:loc>
+      <image:title>Знищення мишоподібних гризунів біологічним методом</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-disinsection.jpg</image:loc>
+      <image:title>Дезінсекція — Знищення тарганів, клопів, бліх та комах</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-disinfection.jpg</image:loc>
+      <image:title>Дезінфекція приміщень — Знезараження вірусів, бактерій, цвілі</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-ozonation.jpg</image:loc>
+      <image:title>Промислова озонація — Видалення запахів, гарі, демеркуризація</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-water-disinfection.jpg</image:loc>
+      <image:title>Знезараження питної води в криницях дозуючим керамічним патроном</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-storage-protection.jpg</image:loc>
+      <image:title>Захист складів та елеваторів від шкідників хлібних запасів НАССР</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-outdoor-treatment.jpg</image:loc>
+      <image:title>Акарицидна обробка ділянок від кліщів та комарів</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-haccp-audit.jpg</image:loc>
+      <image:title>Комплексний санітарний аудит НАССР та пест-контроль для бізнесу</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-asenizatsiya.jpg</image:loc>
+      <image:title>Асенізація — Викачка вигрібних ям, септиків, мулу авто 3 і 6 м³</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-bio-cleaning.jpg</image:loc>
+      <image:title>Очищення септиків та відновлення дренажу біопрепаратами</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/services/service-drain-cleaning.jpg</image:loc>
+      <image:title>Гідродинамічна промивка каналізаційних труб високим тиском</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/sert1.jpg</image:loc>
+      <image:title>Акт відповідності пест-контролю стандарту ДСТУ EN 16636:2015</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/sert2.jpg</image:loc>
+      <image:title>Свідоцтво про кваліфікацію лікаря-дезінфектора</image:title>
+    </image:image>
+  </url>
+
+  <!-- 3. Каталог товарів -->
+  <url>
+    <loc>https://nemyo.com.ua/products.html</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/products/ceramic-patron.jpg</image:loc>
+      <image:title>Керамічний дозуючий патрон для знезараження води у криниці</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/products/bleaching-powder.jpg</image:loc>
+      <image:title>Хлорне вапно для дезінфекції та патронів</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/products/insect-lamp.jpg</image:loc>
+      <image:title>Інсектицидна лампа з клейовим екраном для харчових виробництв НАССР</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://nemyo.com.ua/img/products/bait-station.jpg</image:loc>
+      <image:title>Приманочний дератизаційний контейнер для захисту від гризунів</image:title>
+    </image:image>
+  </url>
+
+  <!-- 4. Пам'ятка клієнту / Інструкції -->
+  <url>
+    <loc>https://nemyo.com.ua/instructions.html</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- 5. Контакти та реквізити -->
+  <url>
+    <loc>https://nemyo.com.ua/contacts.html</loc>
+    <lastmod>2026-10-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
