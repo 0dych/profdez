@@ -6553,12 +6553,27 @@ body:has(.form-control:focus) .speed-dial-wrapper { visibility: hidden; pointer-
     display: flex !important;
     align-items: center;
     gap: 0.85rem;
+    background: transparent !important;
+    box-shadow: none !important;
+    filter: none !important;
   }
 
   .print-logo-img {
-    width: 46px !important;
-    height: 46px !important;
-    object-fit: contain;
+    width: 48px !important;
+    height: 48px !important;
+    object-fit: contain !important;
+    border-radius: 50% !important;
+    clip-path: circle(50% at center) !important;
+    -webkit-clip-path: circle(50% at center) !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+    mix-blend-mode: normal !important;
+    border: none !important;
+    outline: none !important;
   }
 
   .print-brand-info {

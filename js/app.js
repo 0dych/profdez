@@ -790,19 +790,27 @@ function initModal() {
     if (!btn) return;
     e.preventDefault();
     opener = btn;
-    backdrop.querySelector('form').hidden = false;
-    backdrop.querySelector('#orderModalDescription').hidden = false;
+    const form = backdrop.querySelector('form');
+    if (form) form.hidden = false;
+    const descEl = backdrop.querySelector('#orderModalDescription') || backdrop.querySelector('.order-modal-description');
+    if (descEl) {
+      descEl.hidden = false;
+      const product = !!btn.closest('.product-card');
+      descEl.textContent = product
+        ? 'Залиште ім’я та телефон. Ми уточнимо наявність, ціну й умови отримання товару.'
+        : 'Залиште ім’я та телефон. Ми зв’яжемося з вами, уточнимо деталі та погодимо вартість.';
+    }
     backdrop.querySelectorAll('.lead-success, .lead-feedback').forEach(el => { el.hidden = true; });
     const serviceName = btn.dataset.serviceName || 'Консультація';
     if (serviceInput) serviceInput.value = serviceName === 'Виклик лікаря' ? 'Консультація щодо послуг' : serviceName;
     const product = !!btn.closest('.product-card');
-    backdrop.querySelector('#orderModalTitle').textContent = product ? 'Заявка на товар' : 'Залишити заявку';
-    backdrop.querySelector('#orderModalDescription').textContent = product
-      ? 'Залиште ім’я та телефон. Ми уточнимо наявність, ціну й умови отримання товару.'
-      : 'Залиште ім’я та телефон. Ми зв’яжемося з вами, уточнимо деталі та погодимо вартість.';
+    const titleEl = backdrop.querySelector('#orderModalTitle') || backdrop.querySelector('.order-modal-title') || backdrop.querySelector('h2, h3');
+    if (titleEl) {
+      titleEl.textContent = product ? 'Заявка на товар' : 'Залишити заявку';
+    }
     backdrop.classList.add('open');
     requestAnimationFrame(() => {
-      if (backdrop.classList.contains('open')) dialog.focus({ preventScroll: true });
+      if (backdrop.classList.contains('open') && dialog) dialog.focus({ preventScroll: true });
     });
   });
   if (closeBtn) closeBtn.addEventListener('click', close);
