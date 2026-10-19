@@ -25,17 +25,7 @@ const DEFAULT_CONTENT = {
       tiktok: "https://www.tiktok.com/@profdezzakarpattia?_r=1"
     }
   },
-  trust: {
-    eyebrow: "Нам довіряють",
-    title: "Захищаємо людей і відповідальний бізнес",
-    subtitle: "Працюємо прозоро: з діагностикою, безпечними засобами та офіційними документами.",
-    items: [
-      { icon: "✓", title: "Сертифікати НАССР", subtitle: "Відповідність ДСТУ EN 16636:2015" },
-      { icon: "📋", title: "Офіційні акти", subtitle: "100% захист під час перевірок Держпродспоживслужби" },
-      { icon: "👨‍⚕️", title: "Сертифіковані лікарі", subtitle: "Лікарі-дезінфектори з профільним медичним досвідом" },
-      { icon: "📍", title: "Вся Закарпатська область", subtitle: "Швидкий виїзд із Мукачева (Ужгород, Берегове, Хуст, Тячів)" }
-    ]
-  }
+
 };
 
 let siteData = DEFAULT_CONTENT;
@@ -46,13 +36,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 2. Ініціалізація компонентів інтерфейсу
   initMobileMenu();
+  initStickyHeader();
   initSpeedDial();
   initServiceFilters();
   initCardSliders();
   initRevealAnimations();
   initInstructionTabs();
   initModal();
+  initDoctorContactModal();
   initLeadForms();
+  initProductGalleries();
   initCertificatesModal();
   initWorksSlider();
   initScrollToTop();
@@ -64,32 +57,15 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Завантаження content.json або використання локального сховища/дефолту
  */
 async function loadSiteContent() {
+  try { localStorage.removeItem('pdt_site_content'); } catch (_) {}
   let loaded = null;
   try {
-    const res = await fetch('data/content.json', { cache: 'no-store' });
+    const res = await fetch('data/content.json?v=20261019-9', { cache: 'no-store' });
     if (res.ok) {
       loaded = await res.json();
     }
   } catch (err) {
-    console.info("Серверний конфіг недоступний; перевіряємо локальну копію.");
-  }
-
-  // Якщо в адмінці зберігали зміни в цьому браузері — показуємо їх
-  const localSaved = localStorage.getItem('pdt_site_content');
-  if (localSaved) {
-    try {
-      const parsed = JSON.parse(localSaved);
-      if (parsed && typeof parsed === 'object') {
-        siteData = Object.assign({}, loaded || DEFAULT_CONTENT, parsed);
-        if (siteData.trust && Array.isArray(siteData.trust.items)) {
-          siteData.trust.items = siteData.trust.items.filter(i => i && i.title && !i.title.includes('Нова перевага'));
-        }
-        applyDataToDOM(siteData);
-        return;
-      }
-    } catch (e) {
-      console.warn("Помилка читання localStorage", e);
-    }
+    console.info("Серверний конфіг недоступний; використовуємо актуальну розмітку HTML.");
   }
 
   siteData = loaded || DEFAULT_CONTENT;
@@ -103,8 +79,9 @@ function applyDataToDOM(data) {
   if (!data || !data.company) return;
 
   const c = data.company;
+  const cleanPrimaryPhone = (c.phones[0] || '').replace(/[^+\d]/g, '');
   document.querySelectorAll('[data-primary-call]').forEach(link => {
-    link.href = `tel:${c.phones[0].replace(/[^+\d]/g, '')}`;
+    link.href = `tel:${cleanPrimaryPhone}`;
     link.setAttribute('aria-label', `Зателефонувати ${c.phones[0]}`);
   });
 
@@ -116,12 +93,12 @@ function applyDataToDOM(data) {
     } else {
       el.textContent = c.phones[0];
     }
-    if (el.tagName === 'A') el.href = `tel:${c.phones[0].replace(/[^+\d]/g, '')}`;
+    if (el.tagName === 'A') el.href = `tel:${cleanPrimaryPhone}`;
   });
 
   document.querySelectorAll('[data-bind="phone-secondary"]').forEach(el => {
     el.textContent = c.phones[1];
-    if (el.tagName === 'A') el.href = `tel:${c.phones[1].replace(/[^+\d]/g, '')}`;
+    if (el.tagName === 'A') el.href = `tel:${(c.phones[1] || '').replace(/[^+\d]/g, '')}`;
   });
 
   document.querySelectorAll('[data-bind="email"]').forEach(el => {
@@ -138,6 +115,9 @@ function applyDataToDOM(data) {
   });
   document.querySelectorAll('[data-bind="region"]').forEach(el => { el.textContent = c.region || ''; });
 
+  ['name','nameEn','edrpou','extract','director'].forEach(key=>document.querySelectorAll('[data-company="'+key+'"]').forEach(el=>el.textContent=c[key] || ''));
+  document.querySelectorAll('.req-copy-pill[data-copy-val]').forEach(el=>el.dataset.copyVal=c.edrpou || '');
+
   // Оновлення посилань соцмереж
   if (c.socials) {
     document.querySelectorAll('[data-social="viber"]').forEach(el => el.href = c.socials.viber || '#');
@@ -148,16 +128,46 @@ function applyDataToDOM(data) {
     document.querySelectorAll('[data-social="tiktok"]').forEach(el => el.href = c.socials.tiktok || '#');
   }
 
+  // Синхронізація контактів у модальному вікні лікаря (#doctorContactModal)
+  const docModal = document.getElementById('doctorContactModal');
+  if (docModal && c.phones[0]) {
+    const phoneVal = docModal.querySelector('.doctor-modal-phone-val');
+    if (phoneVal) {
+      phoneVal.textContent = c.phones[0];
+      phoneVal.href = `tel:${cleanPrimaryPhone}`;
+    }
+    const callCard = docModal.querySelector('.doctor-channel-card.call');
+    if (callCard) callCard.href = `tel:${cleanPrimaryPhone}`;
+    if (c.socials) {
+      const viberCard = docModal.querySelector('.doctor-channel-card.viber');
+      if (viberCard && c.socials.viber) viberCard.href = c.socials.viber;
+      const tgCard = docModal.querySelector('.doctor-channel-card.telegram');
+      if (tgCard && c.socials.telegram) tgCard.href = c.socials.telegram;
+      const waCard = docModal.querySelector('.doctor-channel-card.whatsapp');
+      if (waCard && c.socials.whatsapp) waCard.href = c.socials.whatsapp;
+    }
+    const copyBtn = docModal.querySelector('[data-copy-val]');
+    if (copyBtn) {
+      copyBtn.setAttribute('data-copy-val', cleanPrimaryPhone);
+      const copySpan = copyBtn.querySelector('span');
+      if (copySpan) copySpan.textContent = `Скопіювати номер: ${c.phones[0]}`;
+    }
+  }
+
   applyHeroSection(data.hero);
   applyKeyStats(data.keyStats);
-  applyTrustSection(data.trust);
+  applyHomeSlides(data.homeSlides);
+  applyHomeCases(data.homeCases);
+  applyCertificates(data.certificates);
+
+  applyServiceDetails(data);
   applyCatalogCards(data);
 }
 
 function applyHeroSection(hero) {
   if (!hero) return;
   const titleEl = document.querySelector('[data-bind="hero-title"]') || document.querySelector('.hero-title');
-  if (titleEl && hero.title) {
+  if (titleEl && typeof hero.title === 'string') {
     const template = document.createElement('template');
     template.innerHTML = hero.title;
     const clean = node => {
@@ -171,15 +181,15 @@ function applyHeroSection(hero) {
     titleEl.replaceChildren(...[...template.content.childNodes].map(clean));
   }
   const descEl = document.querySelector('[data-bind="hero-desc"]') || document.querySelector('.hero-desc');
-  if (descEl && hero.desc) {
+  if (descEl && typeof hero.desc === 'string') {
     descEl.textContent = hero.desc;
   }
   const badgeText = document.querySelector('[data-bind="hero-badge-text"]');
-  if (badgeText && hero.badge) {
+  if (badgeText && typeof hero.badge === 'string') {
     badgeText.textContent = hero.badge;
   }
   const badgeTag = document.querySelector('[data-bind="hero-badge-tag"]');
-  if (badgeTag && hero.tag) {
+  if (badgeTag && typeof hero.tag === 'string') {
     badgeTag.textContent = hero.tag;
   }
 }
@@ -191,51 +201,15 @@ function applyKeyStats(stats) {
     if (statCards[idx]) {
       const val = statCards[idx].querySelector('.stat-val, .hero-stat-val');
       const lbl = statCards[idx].querySelector('.stat-label, .hero-stat-lbl');
-      if (val && st.value) val.textContent = st.value;
-      if (lbl && st.label) lbl.textContent = st.label;
+      if (val && typeof st.value === 'string') val.textContent = st.value;
+      if (lbl && typeof st.label === 'string') lbl.textContent = st.label;
     }
-  });
-}
-
-function setText(selector, value) {
-  document.querySelectorAll(selector).forEach(el => {
-    if (value) el.textContent = value;
-  });
-}
-
-function applyTrustSection(trust) {
-  if (!trust) return;
-  setText('[data-bind="trust-eyebrow"]', trust.eyebrow);
-  setText('[data-bind="trust-title"]', trust.title);
-  setText('[data-bind="trust-subtitle"]', trust.subtitle);
-
-  const grid = document.getElementById('trustHighlights');
-  if (!grid || !Array.isArray(trust.items) || !trust.items.length) return;
-  const validItems = trust.items.filter(item => item && item.title && !item.title.includes('Нова перевага'));
-  if (!validItems.length) return;
-  grid.replaceChildren();
-  validItems.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'trust-item';
-    const icon = document.createElement('div');
-    icon.className = 'trust-icon';
-    icon.textContent = item.icon || '✓';
-    const text = document.createElement('div');
-    const title = document.createElement('div');
-    title.className = 'trust-title';
-    title.textContent = item.title || '';
-    const subtitle = document.createElement('div');
-    subtitle.className = 'trust-sub';
-    subtitle.textContent = item.subtitle || '';
-    text.append(title, subtitle);
-    card.append(icon, text);
-    grid.appendChild(card);
   });
 }
 
 function applyCatalogCards(data) {
   (data.services || []).forEach(service => {
-    const card = document.querySelector(`[data-catalog-service="${CSS.escape(String(service.id))}"]`) || document.getElementById(service.id);
+    const card = document.querySelector(`[data-catalog-service="${CSS.escape(String(service.id))}"]`);
     if (!card) return;
     card.dataset.category = service.category || card.dataset.category;
     const badge = card.querySelector('.service-badge');
@@ -243,6 +217,10 @@ function applyCatalogCards(data) {
     const description = card.querySelector('.service-desc');
     const features = card.querySelector('.service-features');
     const orderButton = card.querySelector('[data-open-modal]');
+    const image = card.querySelector('.service-img');
+    const mainImage = service.detail?.images?.find(photo=>!photo.removed) || service.detail?.gallery?.[0];
+    if(image && service.detail?.images?.length)image.hidden=!mainImage;
+    if (image && window.PDTServiceContent?.imageURL(mainImage?.src)) { image.src = mainImage.src; image.alt = mainImage.alt || service.title; }
     if (badge) badge.textContent = service.badge || '';
     if (title) title.textContent = service.title || '';
     if (description) description.textContent = service.shortDesc || '';
@@ -256,16 +234,33 @@ function applyCatalogCards(data) {
     if (orderButton) orderButton.dataset.serviceName = service.title || 'Консультація';
   });
 
-  (data.products || []).forEach(product => {
+  if (!Array.isArray(data.products) || !data.products.length) return;
+  const isAllowedImg = (src) => window.PDTServiceContent ? window.PDTServiceContent.imageURL(src) : (typeof src === 'string' && src.trim().length > 0 && !src.includes('..'));
+  const productIds=new Set(data.products.map(item=>item.id));
+  const productTemplate=document.querySelector('[data-catalog-product]')?.cloneNode(true);
+  const productGrid=document.querySelector('[data-catalog-product]')?.parentElement;
+  document.querySelectorAll('[data-catalog-product]').forEach(card=>{if(!productIds.has(card.dataset.catalogProduct)) card.remove();});
+  data.products.forEach(product => {
+    if(productGrid && productTemplate && !document.querySelector('[data-catalog-product="'+CSS.escape(String(product.id))+'"]')) {
+      const added=productTemplate.cloneNode(true); added.dataset.catalogProduct=product.id;
+      added.querySelectorAll('img').forEach(image=>image.remove()); productGrid.appendChild(added);
+    }
     const card = document.querySelector(`[data-catalog-product="${CSS.escape(String(product.id))}"]`);
     if (!card) return;
+    if(Array.isArray(product.photos) && product.photos.length){
+      const wrapper=card.querySelector('.product-img-wrapper');
+      if(wrapper){wrapper.replaceChildren();wrapper.hidden=false;product.photos.forEach(photo=>{if(!isAllowedImg(photo.src))return;const img=document.createElement('img');img.className='product-img';img.src=photo.src;img.alt=photo.alt || product.title;img.loading='lazy';img.width=500;img.height=400;wrapper.append(img);});wrapper.classList.toggle('product-photo-gallery',product.photos.length>1);}
+    }
     const badge = card.querySelector('.product-badge');
     const title = card.querySelector('.product-title');
     const description = card.querySelector('.product-desc');
     const features = card.querySelector('.product-features');
     const price = card.querySelector('.product-price');
     const orderButton = card.querySelector('[data-open-modal]');
-    if (badge) badge.textContent = product.badge || product.status || '';
+    if (badge) badge.textContent = product.badge || '';
+    let status=card.querySelector('.product-stock-status');
+    if(!status){status=document.createElement('p');status.className='product-stock-status';card.querySelector('.product-price')?.after(status);}
+    status.textContent=product.status || ''; status.hidden=!product.status;
     if (title) title.textContent = product.title || '';
     if (description) description.textContent = product.shortDesc || '';
     if (price) price.textContent = product.price || 'За запитом';
@@ -277,6 +272,59 @@ function applyCatalogCards(data) {
       }));
     }
     if (orderButton) orderButton.dataset.serviceName = product.title || 'Замовлення товару';
+  });
+}
+
+function applyServiceDetails(data) {
+  if (!Array.isArray(data.services)) return;
+  const ids = new Set(data.services.map(service=>service.id));
+  document.querySelectorAll('.service-detail-block[id], [data-catalog-service]').forEach(block=>{
+    if (!ids.has(block.dataset.catalogService || block.id)) block.remove();
+  });
+  document.querySelectorAll('.service-quick-btn').forEach(link=>{
+    if (!ids.has(link.getAttribute('href')?.slice(1))) link.remove();
+  });
+  const detailParent = document.querySelector('.services-detailed-container');
+  const slider = document.getElementById('servicesSlider');
+  for (const service of data.services) {
+    let block=document.getElementById(service.id);
+    if (!block && detailParent) {
+      block=document.createElement('article');block.className='service-detail-block';block.id=service.id;
+      const heading=document.createElement('h2');heading.className='service-detail-heading';heading.textContent=service.title;
+      const desc=document.createElement('div');desc.className='service-detail-desc';desc.textContent=service.fullDesc || service.shortDesc || '';
+      const features=document.createElement('ul');features.className='service-features';
+      for(const text of service.items || []){const item=document.createElement('li');item.textContent=text;features.append(item);}
+      const footer=document.createElement('div');footer.className='service-detail-footer';
+      const price=document.createElement('span');price.className='service-price-pill';price.textContent=service.price || 'За домовленістю';footer.append(price);
+      const order=document.createElement('button');order.className='btn btn-primary';order.dataset.openModal='';order.dataset.serviceName=service.title;order.textContent='Замовити';footer.append(order);
+      block.append(heading,desc,features,footer);detailParent.append(block);
+    }
+    if (block?.classList.contains('service-detail-block')) {
+      block.dataset.category=service.category || '';
+      window.PDTServiceContent?.apply(block,service.detail);
+      block.querySelectorAll('[data-open-modal]').forEach(button=>button.dataset.serviceName=service.title);
+    }
+    if (slider && !slider.querySelector(`[data-catalog-service="${CSS.escape(service.id)}"]`)) {
+      const card=document.createElement('div');card.className='service-card';card.dataset.catalogService=service.id;
+      const badge=document.createElement('span');badge.className='service-badge';
+      const heading=document.createElement('h3');heading.className='service-title';
+      const desc=document.createElement('p');desc.className='service-desc';
+      const mainImage=service.detail?.images?.[0] || service.detail?.gallery?.[0];
+      if(window.PDTServiceContent?.imageURL(mainImage?.src)){const img=document.createElement('img');img.className='service-img';img.src=mainImage.src;img.alt=mainImage.alt || service.title;img.loading='lazy';card.append(img);}
+      const order=document.createElement('button');order.className='btn btn-primary';order.dataset.openModal='';order.textContent='Замовити';
+      const link=document.createElement('a');link.href='services.html#'+service.id;link.className='btn btn-outline';link.textContent='Детальніше';
+      card.append(badge,heading,desc,order,link);slider.append(card);
+    }
+    const nav=document.querySelector('.service-quick-btn')?.parentElement;
+    if (nav && !nav.querySelector(`[href="#${CSS.escape(service.id)}"]`)) {
+      const link=document.createElement('a');link.className='service-quick-btn';link.href='#'+service.id;link.dataset.category=service.category || '';link.textContent=service.title;nav.append(link);
+    }
+  }
+  document.querySelectorAll('select[name="service"]').forEach(select=>{
+    const selected=select.value;
+    const placeholder=document.createElement('option');placeholder.value='';placeholder.textContent='Оберіть послугу…';
+    select.replaceChildren(placeholder,...data.services.map(service=>{const option=document.createElement('option');option.value=service.title;option.textContent=service.title;return option;}));
+    select.value=selected;
   });
 }
 
@@ -424,11 +472,6 @@ function initServiceFilters() {
         qBtn.style.display = 'none';
       }
     });
-    const counter = document.querySelector('.services-quick-count');
-    if (counter) {
-      counter.setAttribute('role', 'status');
-      counter.textContent = `Знайдено: ${[...quickBtns].filter(btn => btn.style.display !== 'none').length}`;
-    }
 
     const slider = document.getElementById('servicesSlider');
     if (slider) {
@@ -493,40 +536,90 @@ function initServiceFilters() {
     const targetBlock = document.getElementById(hashId);
     if (targetBlock) {
       if (targetBlock.style.display === 'none') applyCategoryFilter('all');
-      const positionTarget = () => {
-        scrollToTargetWithOffset(targetBlock);
-      };
-      setTimeout(positionTarget, 150);
-      window.addEventListener('load', positionTarget, { once: true });
+      scrollToTargetWithOffset(targetBlock);
+      setTimeout(() => scrollToTargetWithOffset(targetBlock), 220);
+      if (document.readyState !== 'complete') {
+        window.addEventListener('load', () => scrollToTargetWithOffset(targetBlock), { once: true });
+      }
     }
   }
 }
 
 /**
+ * Липка шапка (.site-header): фіксація стану прокрутки
+ */
+function initStickyHeader() {
+  const siteHeader = document.querySelector('.site-header');
+  if (!siteHeader) return;
+  const onScroll = () => {
+    if (window.scrollY > 40) siteHeader.classList.add('scrolled');
+    else siteHeader.classList.remove('scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+}
+
+let activeScrollTimers = [];
+
+/**
  * Плавне точне прокручування до цільового блоку з урахуванням висоти закріпленої шапки
+ * та автоматичною корекцією після можливого зміщення висоти карток/фото під час скролу
  */
 function scrollToTargetWithOffset(element, customOffset = null) {
-  if (element?.tagName === 'DETAILS') element.open = true;
   if (!element) return;
-  if (element.matches('.service-detail-block')) document.dispatchEvent(new CustomEvent('service:reveal', { detail: element }));
-  const header = document.querySelector('.site-header');
-  const headerHeight = header ? header.getBoundingClientRect().height : 75;
-  const offset = customOffset !== null ? customOffset : (headerHeight + 25);
+  if (element.tagName === 'DETAILS') element.open = true;
 
-  const rect = element.getBoundingClientRect();
-  const absoluteTop = rect.top + window.pageYOffset;
-  const targetY = Math.max(0, absoluteTop - offset);
+  activeScrollTimers.forEach(t => clearTimeout(t));
+  activeScrollTimers = [];
+
+  if (element.matches('.service-detail-block')) {
+    document.dispatchEvent(new CustomEvent('service:reveal', { detail: element }));
+    document.querySelectorAll('.service-detail-block.service-target-active').forEach(b => {
+      if (b !== element) b.classList.remove('service-target-active');
+    });
+    element.classList.add('service-target-active');
+    const clearHighlight = setTimeout(() => element.classList.remove('service-target-active'), 2600);
+    activeScrollTimers.push(clearHighlight);
+  }
+
+  // Примусове оновлення розрахунку геометрії після показу прихованих карток
+  void element.offsetHeight;
+
+  const getTargetY = () => {
+    const header = document.querySelector('.site-header');
+    // Використовуємо стабільну висоту закріпленої шапки (~68px у стані scrolled)
+    const headerHeight = header ? Math.min(header.getBoundingClientRect().height || 68, 72) : 68;
+    const offset = customOffset !== null ? customOffset : (headerHeight + 16);
+    const rect = element.getBoundingClientRect();
+    return Math.max(0, Math.round(rect.top + window.scrollY - offset));
+  };
 
   window.scrollTo({
-    top: targetY,
+    top: getTargetY(),
     behavior: 'smooth'
+  });
+
+  // Якщо під час плавного скролу завантажились ліниві зображення або змінилась висота сусідніх блоків — доводимо позицію точно до заголовка послуги
+  let userInterrupted = false;
+  const onUserScroll = () => { userInterrupted = true; };
+  window.addEventListener('wheel', onUserScroll, { once: true, passive: true });
+  window.addEventListener('touchmove', onUserScroll, { once: true, passive: true });
+
+  [320, 620].forEach(delay => {
+    const timer = setTimeout(() => {
+      if (userInterrupted) return;
+      const expectedY = getTargetY();
+      if (Math.abs(window.scrollY - expectedY) > 6) {
+        window.scrollTo({ top: expectedY, behavior: 'smooth' });
+      }
+    }, delay);
+    activeScrollTimers.push(timer);
   });
 }
 
-/** Компактні горизонтальні каталоги на головній сторінці з автопрокруткою */
-/** РљРѕРјРїР°РєС‚РЅС– РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅС– РєР°С‚Р°Р»РѕРіРё Р· РЅРµРїРµСЂРµСЂРІРЅРёРј С€РѕРІРєРѕРІРёРј СЂСѓС…РѕРј (Infinite Marquee Glide) */
+/** Компактні горизонтальні каталоги на головній сторінці з неперервним шовковим рухом (Infinite Marquee Glide) */
 function initCardSliders() {
-  // РћР±СЂРѕР±РЅРёРєРё СЃС‚СЂС–Р»РѕРє СЂСѓС‡РЅРѕРіРѕ РіРѕСЂС‚Р°РЅРЅСЏ
+  // Обробники стрілок ручного гортання
   document.querySelectorAll('[data-slider-prev], [data-slider-next]').forEach(button => {
     button.addEventListener('click', () => {
       const targetId = button.dataset.sliderPrev || button.dataset.sliderNext;
@@ -539,16 +632,16 @@ function initCardSliders() {
     });
   });
 
-  // РќРµРїРµСЂРµСЂРІРЅРёР№ РїР»Р°РІРЅРёР№ СЂСѓС… РґР»СЏ СЃР»Р°Р№РґРµСЂС–РІ Р· data-autoplay="true"
+  // Неперервний плавний рух для слайдерів з data-autoplay="true"
   const autoSliders = document.querySelectorAll('.card-slider[data-autoplay="true"]');
   autoSliders.forEach(slider => {
     let animId = null;
     let isPaused = false;
     let isVisible = true;
     let pauseTimeout = null;
-    const speed = 0.65; // РЁРІРёРґРєС–СЃС‚СЊ: С€РѕРІРєРѕРІРёР№ РґРµР»С–РєР°С‚РЅРёР№ СЂСѓС… (~40px/СЃРµРє)
+    const speed = 0.65; // Швидкість: шовковий делікатний рух (~40px/сек)
 
-    // РљР»РѕРЅСѓС”РјРѕ РїРµСЂРІРёРЅРЅС– РєР°СЂС‚РєРё РґР»СЏ СЃС‚РІРѕСЂРµРЅРЅСЏ Р±РµР·РїРµСЂРµСЂРІРЅРѕРіРѕ Р±РµР·С€РѕРІРЅРѕРіРѕ С†РёРєР»Сѓ
+    // Клонуємо первинні картки для створення безперервного безшовного циклу
     const originalChildren = Array.from(slider.children);
     if (originalChildren.length <= 1) return;
 
@@ -558,7 +651,7 @@ function initCardSliders() {
       slider.appendChild(clone);
     });
 
-    // Р РѕР·СЂР°С…СѓРЅРѕРє С‚РѕС‡РєРё Р±РµР·С€РѕРІРЅРѕРіРѕ Р·Р°С†РёРєР»РµРЅРЅСЏ (С€РёСЂРёРЅР° РѕСЂРёРіС–РЅР°Р»СЊРЅРѕРіРѕ РЅР°Р±РѕСЂСѓ)
+    // Розрахунок точки безшовного зациклення (ширина оригінального набору)
     const getHalfWidth = () => {
       const originalCards = Array.from(slider.children).filter(c => !c.hasAttribute('data-clone') && c.offsetWidth > 0);
       if (!originalCards.length) return slider.scrollWidth / 2;
@@ -571,13 +664,12 @@ function initCardSliders() {
       halfWidth = getHalfWidth();
     });
 
-    // РћСЃРЅРѕРІРЅРёР№ С†РёРєР» РїР»Р°РІРЅРѕС— Р°РЅС–РјР°С†С–С— РЅР° requestAnimationFrame (60/120 FPS)
+    // Основний цикл плавної анімації на requestAnimationFrame (60/120 FPS)
     const tick = () => {
       if (!isPaused && isVisible && !slider.classList.contains('is-dragging')) {
         slider.scrollLeft += speed;
 
-        // РљРѕР»Рё РґС–Р№С€Р»Рё РґРѕ РєРѕРїС–С— вЂ” РјРёС‚С‚С”РІРѕ РїРѕРІРµСЂС‚Р°С”РјРѕ РЅР° РїРѕС‡Р°С‚РѕРє РѕСЂРёРіС–РЅР°Р»СЊРЅРѕРіРѕ РЅР°Р±РѕСЂСѓ
-        // РћСЃРєС–Р»СЊРєРё РєРѕРїС–С— С–РґРµРЅС‚РёС‡РЅС– РґРѕ РїС–РєСЃРµР»СЏ, РІС–Р·СѓР°Р»СЊРЅРѕ Р·СЃСѓРІ Р°Р±СЃРѕР»СЋС‚РЅРѕ РЅРµРІРёРґРёРјРёР№
+        // Коли дійшли до копії — миттєво повертаємо на початок оригінального набору
         if (slider.scrollLeft >= halfWidth) {
           slider.scrollLeft -= halfWidth;
         } else if (slider.scrollLeft <= 0) {
@@ -589,7 +681,7 @@ function initCardSliders() {
 
     animId = requestAnimationFrame(tick);
 
-    // РџР°СѓР·Р° РїСЂРё РЅР°РІРµРґРµРЅРЅС– РєСѓСЂСЃРѕСЂСѓ РјРёС€С– Р±РµР·РїРѕСЃРµСЂРµРґРЅСЊРѕ РЅР° РєР°СЂС‚РєРё
+    // Пауза при наведенні курсору миші безпосередньо на картки
     slider.addEventListener('mouseenter', () => {
       clearTimeout(pauseTimeout);
       isPaused = true;
@@ -602,7 +694,7 @@ function initCardSliders() {
       }, 700);
     });
 
-    // РџР°СѓР·Р° РїСЂРё РґРѕС‚РёРєСѓ РЅР° СЃРјР°СЂС‚С„РѕРЅР°С…
+    // Пауза при дотику на смартфонах
     slider.addEventListener('touchstart', () => {
       clearTimeout(pauseTimeout);
       isPaused = true;
@@ -615,7 +707,7 @@ function initCardSliders() {
       }, 2500);
     }, { passive: true });
 
-    // РџСЂРё РєР»С–РєСѓ РЅР° СЃС‚СЂС–Р»РєРё вЂ” РїР°СѓР·Р° РЅР° 3.5 СЃРµРєСѓРЅРґРё
+    // При кліку на стрілки — пауза на 3.5 секунди
     const sliderId = slider.id;
     if (sliderId) {
       document.querySelectorAll(`[data-slider-prev="${sliderId}"], [data-slider-next="${sliderId}"]`).forEach(btn => {
@@ -629,7 +721,7 @@ function initCardSliders() {
       });
     }
 
-    // Р—СѓРїРёРЅСЏС”РјРѕ Р°РЅС–РјР°С†С–СЋ, РєРѕР»Рё Р±Р»РѕРє РїРѕР·Р° РµРєСЂР°РЅРѕРј (0% РЅР°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ CPU)
+    // Зупиняємо анімацію, коли блок поза екраном (0% навантаження CPU)
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -649,7 +741,7 @@ function initCardSliders() {
       }
     }, { passive: false });
 
-    // Drag-to-scroll РґР»СЏ РјРёС€РєРё
+    // Drag-to-scroll для мишки
     let isDown = false;
     let startX = 0;
     let scrollLeft = 0;
@@ -922,6 +1014,63 @@ function getLeadPayload(form) {
 }
 
 /**
+ * Інтерактивна галерея фото у картках товарів (перемикання фото + збільшення по кліку)
+ */
+function initProductGalleries() {
+  document.querySelectorAll('.product-card .product-img-wrapper').forEach(wrapper => {
+    const imgs = Array.from(wrapper.querySelectorAll('.product-img'));
+    if (!imgs.length) return;
+
+    imgs.forEach(img => {
+      if (!img.hasAttribute('data-zoom-cert')) {
+        img.setAttribute('data-zoom-cert', img.getAttribute('src') || '');
+        img.setAttribute('data-cert-title', img.getAttribute('alt') || 'Фото товару');
+      }
+    });
+
+    if (imgs.length <= 1) return;
+    wrapper.classList.add('product-photo-gallery');
+    wrapper.querySelectorAll('.product-gallery-btn, .product-gallery-counter').forEach(el => el.remove());
+
+    let current = 0;
+    const counter = document.createElement('span');
+    counter.className = 'product-gallery-counter';
+    const updateView = (idx) => {
+      current = (idx + imgs.length) % imgs.length;
+      imgs.forEach((img, i) => {
+        img.style.setProperty('display', i === current ? 'block' : 'none', 'important');
+      });
+      counter.textContent = `${current + 1} / ${imgs.length}`;
+    };
+
+    const prevBtn = document.createElement('button');
+    prevBtn.type = 'button';
+    prevBtn.className = 'product-gallery-btn prev';
+    prevBtn.setAttribute('aria-label', 'Попереднє фото');
+    prevBtn.innerHTML = '&#8249;';
+    prevBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      updateView(current - 1);
+    });
+
+    const nextBtn = document.createElement('button');
+    nextBtn.type = 'button';
+    nextBtn.className = 'product-gallery-btn next';
+    nextBtn.setAttribute('aria-label', 'Наступне фото');
+    nextBtn.innerHTML = '&#8250;';
+    nextBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      updateView(current + 1);
+    });
+
+    wrapper.append(prevBtn, nextBtn, counter);
+    updateView(0);
+  });
+}
+
+/**
  * Збільшення сертифікатів у модальному вікні
  */
 function initCertificatesModal() {
@@ -1131,9 +1280,6 @@ function initScrollToTop() {
  * Модальне вікно лікаря-консультанта (кнопки [data-doctor-contact])
  */
 function initDoctorContactModal() {
-  const triggers = document.querySelectorAll('[data-doctor-contact]');
-  if (!triggers.length) return;
-
   let modal = document.getElementById('doctorContactModal');
   if (!modal) {
     modal = document.createElement('div');
@@ -1145,7 +1291,7 @@ function initDoctorContactModal() {
         <h3 style="margin-bottom:1rem;">Зв'яжіться з лікарем</h3>
         <p style="margin-bottom:1.5rem;color:var(--color-text-muted,#666);">Оберіть зручний спосіб зв'язку</p>
         <div style="display:flex;flex-direction:column;gap:0.75rem;">
-          <a href="tel:0677447749" class="btn btn-primary" style="justify-content:center;">
+          <a href="tel:+380677447749" class="btn btn-primary" style="justify-content:center;">
             📞 Зателефонувати: 067 744-77-49
           </a>
           <a href="viber://chat?number=%2B380677447749" class="btn btn-outline" style="justify-content:center;">
@@ -1161,22 +1307,30 @@ function initDoctorContactModal() {
       </div>
     `;
     document.body.appendChild(modal);
-
-    const closeBtn = modal.querySelector('.cert-modal-close');
-    closeBtn.addEventListener('click', () => modal.classList.remove('open'));
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.classList.remove('open');
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.classList.contains('open')) modal.classList.remove('open');
-    });
   }
 
-  triggers.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      modal.classList.add('open');
-    });
+  let opener = null;
+  const close = () => {
+    modal.classList.remove('open');
+    if (opener?.isConnected) opener.focus({ preventScroll: true });
+  };
+
+  modal.querySelectorAll('.modal-close, .cert-modal-close').forEach(btn => {
+    btn.addEventListener('click', close);
+  });
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) close();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) close();
+  });
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-doctor-contact]');
+    if (!btn) return;
+    e.preventDefault();
+    opener = btn;
+    modal.classList.add('open');
   });
 }
 
@@ -1296,4 +1450,39 @@ function initAnchorSmoothScroll() {
       window.addEventListener('load', scrollOnLoad, { once: true });
     }
   }
+}
+
+function applyHomeSlides(photos) {
+ if(!Array.isArray(photos))return;
+ const slider=document.getElementById('worksSlider');if(!slider)return;
+ const isOk = s => window.PDTServiceContent ? window.PDTServiceContent.imageURL(s) : Boolean(s);
+ const valid=photos.filter(photo=>isOk(photo.src));
+ slider.closest('.cases-gallery-block').hidden=!valid.length;slider.replaceChildren();
+ const dots=document.querySelector('.works-slider-dots');dots?.replaceChildren();
+ valid.forEach((photo,index)=>{const slide=document.createElement('div');slide.className='works-slide'+(index===0?' active':'');slide.setAttribute('aria-hidden',String(index!==0));const img=document.createElement('img');img.className='works-slide-img';img.src=photo.src;img.alt=photo.alt || '';img.loading='lazy';img.width=800;img.height=500;const caption=document.createElement('div');caption.className='works-slide-caption';const tag=document.createElement('span');tag.className='works-slide-tag';tag.textContent=photo.tag || '';const text=document.createElement('p');text.className='works-slide-text';text.textContent=photo.caption || '';caption.append(tag,text);slide.append(img,caption);slider.append(slide);const dot=document.createElement('button');dot.type='button';dot.className='works-dot'+(index===0?' active':'');dot.dataset.slide=index;dot.setAttribute('role','tab');dot.setAttribute('aria-selected',String(index===0));dot.setAttribute('aria-label','Фото '+(index+1));dots?.append(dot);});
+ document.querySelectorAll('.works-slider-arrow,.works-slider-dots').forEach(el=>el.hidden=valid.length<2);
+}
+
+function applyHomeCases(cases){
+ const section=document.getElementById('cases');if(!section || !cases || !Array.isArray(cases.items))return;
+ for(const [key,selector] of [['tag','.section-tag'],['title','.section-title'],['subtitle','.section-subtitle']])if(typeof cases[key]==='string')section.querySelector(selector).textContent=cases[key];
+ const grid=section.querySelector('#casesSlider'),templates=[...grid.querySelectorAll('.case-card')].map(card=>card.cloneNode(true));if(!templates.length)return;
+ grid.replaceChildren();
+ cases.items.forEach(item=>{const card=(templates[item.template] || templates[0]).cloneNode(true);
+ for(const [key,selector] of [['name','.case-company-name'],['tag','.case-tag'],['result','.case-result-text']])card.querySelector(selector).textContent=item[key] || '';
+ const preserve=(selector,key,element)=>{const target=card.querySelector(selector);[...target.childNodes].filter(node=>node.nodeType===Node.TEXT_NODE || (node.nodeType===Node.ELEMENT_NODE && node.tagName.toUpperCase()!==element.toUpperCase())).forEach(node=>node.remove());target.append(document.createTextNode(' '+(item[key] || '')));};
+ preserve('.case-location','location','svg');preserve('.case-task','task','STRONG');card.querySelector('.case-task strong').textContent=item.taskLabel || '';preserve('.case-result-label','resultLabel','SPAN');
+ const kpis=card.querySelector('.case-kpi-row');kpis.replaceChildren();(item.kpis || []).forEach(value=>{const span=document.createElement('span');span.className='case-kpi';span.textContent=value;kpis.append(span);});grid.append(card);
+ });
+ section.querySelector('.cases-slider-wrap').hidden=!cases.items.length;
+}
+
+function applyCertificates(data){
+ const section=document.querySelector('.documents-showcase');if(!section || !data || !Array.isArray(data.items))return;
+ const isOk = s => window.PDTServiceContent ? window.PDTServiceContent.imageURL(s) : Boolean(s);
+ section.querySelector('#documentsTitle').textContent=data.title || '';section.querySelector('.documents-heading p').textContent=data.description || '';
+ const grid=section.querySelector('.documents-grid'),template=grid.querySelector('.document-card')?.cloneNode(true);if(!template)return;grid.replaceChildren();
+ data.items.forEach(item=>{if(!isOk(item.src))return;const card=template.cloneNode(true),image=card.querySelector('img');image.src=item.src;image.alt=item.alt || item.title || '';
+ for(const [key,selector] of [['title','.document-info h3'],['label','.document-label'],['specialty','.document-specialty'],['issuer','.document-issuer'],['reference','.document-reference']])card.querySelector(selector).textContent=item[key] || '';
+ card.querySelectorAll('[data-zoom-cert]').forEach(button=>{button.dataset.zoomCert=item.src;button.dataset.certTitle=[item.title,item.specialty].filter(Boolean).join(': ');button.setAttribute('aria-label','Відкрити '+(item.title || 'документ'));});grid.append(card);});section.hidden=!grid.children.length;
 }

@@ -74,7 +74,7 @@ if ($action === 'change_pin') {
     ], true) . ";\n";
     if (file_put_contents(pdtPrivatePath('admin-credentials.php'), $php, LOCK_EX) === false) {
         http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Не вдалося зберегти PIN. Перевірте права на папку admin/api/.'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => false, 'message' => 'Не вдалося зберегти PIN. Перевірте права на папку admin/private/.'], JSON_UNESCAPED_UNICODE);
         exit;
     }
     echo json_encode(['success' => true], JSON_UNESCAPED_UNICODE);

@@ -1,9 +1,16 @@
 # Custom 404 Error Document
+Options -Indexes
 ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # Private and development files must not be served on HOSTiQ.
+  RewriteRule (^|/)\.(?!well-known(?:/|$))[^/]+(/|$) - [F,L]
+  RewriteRule ^(scripts|scratch|dist)(/|$) - [F,L]
+  RewriteRule ^admin/private(/|$) - [F,L]
+  RewriteRule \.(bak|log|sql|old|orig)$ - [F,L,NC]
 
   # 301 Redirect index.html to /
   RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /.*index\.html\ HTTP/

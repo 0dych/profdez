@@ -5,7 +5,7 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Панель керування | ТОВ «ПРОФДЕЗІНФЕКЦІЯ ЗАКАРПАТТЯ»</title>
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="admin.css?v=20261019-13">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -45,10 +45,14 @@
 
   <!-- Основний контейнер -->
   <div class="admin-container">
+    <section class="admin-page-intro">
+      <div><p class="admin-eyebrow">NEMYO.COM.UA / ПАНЕЛЬ КЕРУВАННЯ</p><h1 id="adminPageTitle">Контакти та реквізити</h1><p id="adminPageDescription">Контактні дані та інформація про вашу компанію.</p></div>
+      <a class="admin-preview-link" href="../index.html" target="_blank" rel="noopener">Переглянути сайт ↗</a>
+    </section>
     <div class="admin-tabs">
       <button class="tab-btn active" data-tab="tab-contacts">📞 Контакти та Реквізити</button>
       <button class="tab-btn" data-tab="tab-socials">💬 Соцмережі та Месенджери</button>
-      <button class="tab-btn" data-tab="tab-home">✨ Головна / Довіра</button>
+      <button class="tab-btn" data-tab="tab-home">⌂ Головна</button>
       <button class="tab-btn" data-tab="tab-services">🛠️ Послуги</button>
       <button class="tab-btn" data-tab="tab-products">📦 Товари</button>
       <button class="tab-btn" data-tab="tab-orders">📥 Заявки <span class="tab-count" id="ordersNewCount" hidden>0</span></button>
@@ -142,6 +146,7 @@
           <div class="form-group-full">
             <label class="admin-label">Instagram профіль:</label>
             <input type="text" id="s_instagram" class="admin-input" placeholder="https://instagram.com/...">
+          </div><div><label class="admin-label">TikTok профіль:</label><input type="text" id="s_tiktok" class="admin-input" placeholder="https://tiktok.com/@...">
           </div>
         </div>
       </div>
@@ -149,36 +154,26 @@
 
     <!-- Вкладка 3: Послуги -->
     <div class="tab-content" id="tab-home">
-      <div class="admin-card">
-        <div class="admin-card-title">Блок «Нам довіряють» на головній</div>
-        <p class="admin-help">Тут краще показувати факти: стандарти, географію, документи та категорії клієнтів. Не додавайте логотипи чи назви клієнтів без їхньої згоди.</p>
-        <div class="form-grid">
-          <div>
-            <label class="admin-label">Надзаголовок:</label>
-            <input type="text" id="t_eyebrow" class="admin-input">
-          </div>
-          <div>
-            <label class="admin-label">Заголовок:</label>
-            <input type="text" id="t_title" class="admin-input">
-          </div>
-          <div class="form-group-full">
-            <label class="admin-label">Підзаголовок:</label>
-            <textarea id="t_subtitle" class="admin-textarea" rows="2"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="admin-card">
-        <div class="admin-card-title">Переваги / підтвердження довіри</div>
-        <div id="trustListContainer"></div>
-        <button type="button" class="add-item-btn" onclick="addNewTrustItem()">+ Додати пункт</button>
-      </div>
+      <div class="admin-card"><div class="admin-card-title">Перший екран головної сторінки</div>
+      <p class="admin-help">Поточні тексти завантажено з головної сторінки. У заголовку можна використовувати &lt;span&gt; для виділення тексту.</p>
+      <div class="form-grid">
+      <div class="form-group-full"><label class="admin-label" for="h_title">Заголовок</label><textarea id="h_title" class="admin-textarea" rows="3"></textarea></div>
+      <div class="form-group-full"><label class="admin-label" for="h_desc">Опис</label><textarea id="h_desc" class="admin-textarea" rows="4"></textarea></div>
+      <div><label class="admin-label" for="h_badge">Текст над заголовком</label><input id="h_badge" class="admin-input"></div>
+      <div><label class="admin-label" for="h_tag">Позначка стандарту</label><input id="h_tag" class="admin-input"></div></div></div>
+      <div class="admin-card"><div class="admin-card-title">Три показники під заголовком</div><div id="homeStatsContainer" class="form-grid"></div></div>
+      <div class="admin-card"><div class="admin-card-title">Фотослайдер виконаних робіт</div><p class="admin-help">Завантажуйте фото, змінюйте підписи та порядок слайдів. Перше фото відкривається першим. Зміни з’являться на сайті після збереження.</p><div id="homeSlidesContainer" class="media-editor-list"></div></div>
+      <div class="admin-card"><div class="admin-card-title">Виконані об’єкти та кейси в Закарпатті</div><p class="admin-help">Заголовок розділу та картки виконаних робіт. Поточні кейси вже завантажено з сайту.</p>
+      <div class="form-grid"><label class="admin-label">Надзаголовок<input id="casesTag" class="admin-input"></label><label class="admin-label">Заголовок<input id="casesTitle" class="admin-input"></label><label class="admin-label form-group-full">Опис розділу<textarea id="casesSubtitle" class="admin-textarea" rows="3"></textarea></label></div><div id="homeCasesContainer"></div><button type="button" id="addHomeCase" class="add-item-btn">+ Додати кейс</button></div>
+      <div class="admin-card"><div class="admin-card-title">Сертифікати та свідоцтва</div><p class="admin-help">Замінюйте фотографії, редагуйте назви й реквізити документів. Додайте сертифікат або приберіть його з сайту. Після редагування збережіть зміни.</p><div class="form-grid"><label class="admin-label">Заголовок блоку<input id="certificatesTitle" class="admin-input"></label><label class="admin-label">Опис блоку<input id="certificatesDescription" class="admin-input"></label></div><div id="certificatesContainer" class="media-editor-list"></div><button type="button" id="addCertificate" class="add-item-btn">+ Додати сертифікат</button></div>
     </div>
 
     <!-- Вкладка 3: Послуги -->
     <div class="tab-content" id="tab-services">
       <div class="admin-card">
         <div class="admin-card-title">Редагування послуг</div>
-        <p class="admin-label">Зміни застосовуються до наявних карток за їх ID. Нові картки й докладні сторінки потребують змін у HTML; додавання запису тут саме по собі їх не створює.</p>
+        <p class="admin-help">Картки на головній редагуються у верхніх полях. Розкрийте «Увесь блок послуги», щоб змінити всі тексти, ціни, умови й фото на сторінці послуг. Поточний вміст сайту вже завантажений. Після редагування натисніть «Зберегти зміни».</p>
+        <div class="service-search-bar"><label for="serviceSearch">Знайти послугу</label><input id="serviceSearch" class="admin-input" type="search" placeholder="Наприклад: озонація або асенізація"><span id="serviceSearchCount" role="status"></span></div>
         <div id="servicesListContainer"></div>
         <button type="button" class="add-item-btn" onclick="addNewService()">+ Додати нову послугу</button>
       </div>
@@ -188,7 +183,7 @@
     <div class="tab-content" id="tab-products">
       <div class="admin-card">
         <div class="admin-card-title">Редагування товарів та обладнання</div>
-        <p class="admin-label">Зміни застосовуються до наявних карток за їх ID. Додавання чи видалення записів потребує відповідних змін у HTML-картках сайту.</p>
+        <p class="admin-label">Назви, описи, ціни, наявність і характеристики змінюються у картках каталогу. Нові товари з’являються після збереження.</p>
         <div id="productsListContainer"></div>
         <button type="button" class="add-item-btn" onclick="addNewProduct()">+ Додати новий товар</button>
       </div>
@@ -269,6 +264,8 @@
     </div>
   </div>
 
-  <script src="admin.js"></script>
+  <script src="../js/service-content.js?v=20261019-13"></script>
+  <script src="service-editor.js?v=20261019-13"></script>
+  <script src="admin.js?v=20261019-13"></script>
 </body>
 </html>

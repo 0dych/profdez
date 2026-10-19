@@ -46,13 +46,18 @@ if (!preg_match('/^\d{5,}:[A-Za-z0-9_-]{20,}$/', $token)) {
     echo json_encode(['success' => false, 'message' => 'Токен має некоректний формат']);
     exit;
 }
+if (!preg_match('/^-?\d{1,20}$/', $chatId)) {
+    http_response_code(422);
+    echo json_encode(['success'=>false,'message'=>'Chat ID має містити лише цифри та, для групи, початковий мінус.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 $php = "<?php\n// Автоматично створено адмін-панеллю. Не завантажуйте цей файл у публічні репозиторії.\nreturn "
      . var_export(['token' => $token, 'chatId' => $chatId], true) . ";\n";
 
 if (file_put_contents($configFile, $php, LOCK_EX) === false) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Не вдалося записати налаштування. Перевірте права на папку admin/api/.']);
+    echo json_encode(['success' => false, 'message' => 'Не вдалося записати налаштування. Перевірте права на папку admin/private/.']);
     exit;
 }
 

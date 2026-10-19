@@ -19,7 +19,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://nemyo.com.ua/img/og-image.jpg">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261019-15">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -53,11 +53,14 @@
             "@type": "Product",
             "position": 1,
             "name": "Керамічний дозуючий патрон для знезараження води у криниці",
-            "image": "https://nemyo.com.ua/img/products/ceramic-patron.jpg",
+            "image": [
+              "https://nemyo.com.ua/img/products/ceramic-patron.jpg",
+              "https://nemyo.com.ua/img/products/ceramic-patron-open.jpg"
+            ],
             "description": "Багаторазовий пористий керамічний циліндр для постійного профілактичного хлорування шахтних криниць об'ємом до 5 м³.",
             "offers": {
               "@type": "Offer",
-              "price": "650",
+              "price": "1000",
               "priceCurrency": "UAH",
               "availability": "https://schema.org/InStock",
               "seller": { "@type": "LocalBusiness", "name": "ТОВ «ПРОФДЕЗІНФЕКЦІЯ ЗАКАРПАТТЯ»" }
@@ -340,7 +343,7 @@
                       <span class="dropdown-item-title">Знезараження води</span>
                       <span class="dropdown-item-sub">Керамічний патрон для криниць</span>
                     </div>
-                    <span class="dropdown-item-price-tag">650 грн</span>
+                    <span class="dropdown-item-price-tag">1000 грн</span>
                   </a>
 
                   <a href="services.html#asenizatsiya" class="dropdown-item">
@@ -470,7 +473,7 @@
                 </defs>
                 <!-- Background subtle tech aura -->
                 <circle cx="100" cy="65" r="52" fill="none" stroke="rgba(16,185,129,0.14)" stroke-width="1" stroke-dasharray="3 4" />
-                
+
                 <!-- Display base shelf -->
                 <line x1="20" y1="104" x2="180" y2="104" stroke="rgba(16,185,129,0.3)" stroke-width="1.5" stroke-linecap="round" />
                 <line x1="32" y1="110" x2="168" y2="110" stroke="rgba(16,185,129,0.12)" stroke-width="1" stroke-linecap="round" />
@@ -531,8 +534,9 @@
       <div class="products-grid">
         <!-- 1. Керамічний патрон -->
         <div class="product-card" data-catalog-product="ceramic-patron">
-          <div class="product-img-wrapper">
-            <img src="img/products/ceramic-patron.jpg" alt="Дозуючий керамічний патрон для криниці" class="product-img" loading="lazy" width="500" height="400">
+          <div class="product-img-wrapper product-photo-gallery">
+            <img src="img/products/ceramic-patron.jpg?v=20261019-15" alt="Дозуючий керамічний патрон для криниці — загальний вигляд з керамічною пробкою" class="product-img" loading="lazy" width="500" height="400">
+            <img src="img/products/ceramic-patron-open.jpg?v=20261019-15" alt="Дозуючий керамічний патрон для криниці — внутрішня камера та різьбова пробка" class="product-img" loading="lazy" width="500" height="400">
           </div>
           <span class="product-badge">Хіт продажів • Багаторазовий</span>
           <h3 class="product-title">Дозуючий керамічний патрон для криниці</h3>
@@ -547,7 +551,7 @@
             <li>Комплектується керамічною пробкою та повною інструкцією</li>
           </ul>
           <div class="product-price-row">
-            <span class="product-price">650 грн</span>
+            <span class="product-price">1000 грн</span>
             <button class="btn btn-primary btn-sm" data-open-modal data-service-name="Дозуючий керамічний патрон">Замовити</button>
           </div>
         </div>
@@ -630,15 +634,15 @@
             <img src="logo.png" alt="Логотип ТОВ ПРОФДЕЗІНФЕКЦІЯ ЗАКАРПАТТЯ" class="footer-logo-img" width="48" height="48">
             <div>
               <div class="brand-text-name">ПРОФДЕЗІНФЕКЦІЯ ЗАКАРПАТТЯ</div>
-              <div class="brand-text-sub">ТОВ «ПРОФДЕЗІНФЕКЦІЯ ЗАКАРПАТТЯ»</div>
+              <div class="brand-text-sub"><span data-company="name">ТОВ «ПРОФДЕЗІНФЕКЦІЯ ЗАКАРПАТТЯ»</span></div>
             </div>
           </div>
           <p class="footer-brand-desc">
             Професійні послуги дезінфекції, дезінсекції, дератизації та озонації для населення та бізнесу Закарпатської області з наданням повного пакету дозвільної документації.
           </p>
           <div class="footer-requisites-card">
-            <div class="footer-req-row"><strong>ЄДРПОУ:</strong> 40769799</div>
-            <div class="footer-req-row"><strong>Виписка:</strong> № 1003231070005003995 від 09.02.2024</div>
+            <div class="footer-req-row"><strong>ЄДРПОУ:</strong> <span data-company="edrpou">40769799</span></div>
+            <div class="footer-req-row"><strong>Виписка:</strong> <span data-company="extract">№ 1003231070005003995 від 09.02.2024</span></div>
             <div class="footer-req-row"><strong>Керівник:</strong> Ольга ХИМИНЕЦЬ</div>
           </div>
           <div class="footer-license-badge">
@@ -858,6 +862,7 @@
       </form>
     </div>
   </div>
-  <script src="js/app.js"></script>
+  <script src="js/service-content.js?v=20261019-15"></script>
+  <script src="js/app.js?v=20261019-15"></script>
 </body>
 </html>

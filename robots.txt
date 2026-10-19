@@ -12,7 +12,6 @@ Allow: /sert2.jpg
 # Закриваємо службові та технічні директорії
 Disallow: /admin/
 Disallow: /data/
-Disallow: /scratch/
 Disallow: /*.php$
 Disallow: /*.json$
 

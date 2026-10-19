@@ -2,11 +2,11 @@ const fs=require('fs'),path=require('path');
 const root=path.resolve(__dirname,'..'),dest=path.join(root,'dist','client-preview');
 fs.mkdirSync(dest,{recursive:true});
 const copy=(name)=>fs.cpSync(path.join(root,name),path.join(dest,name),{recursive:true});
-for(const name of ['index.html','services.html','products.html','instructions.html','contacts.html','css','js','img','logo.png','sert1.jpg','sert2.jpg'])copy(name);
+for(const name of ['index.html','services.html','products.html','instructions.html','contacts.html','404.html','css','js','img','logo.png','sert1.jpg','sert2.jpg'])copy(name);
 fs.mkdirSync(path.join(dest,'data'),{recursive:true});
 const data=JSON.parse(fs.readFileSync(path.join(root,'data/content.json'),'utf8'));delete data.telegramBot;
 fs.writeFileSync(path.join(dest,'data/content.json'),JSON.stringify(data,null,2));
-for(const name of ['index.html','services.html','products.html','instructions.html','contacts.html']){
+for(const name of ['index.html','services.html','products.html','instructions.html','contacts.html','404.html']){
   const file=path.join(dest,name);const html=fs.readFileSync(file,'utf8').replace('<body','<body data-demo="true"');fs.writeFileSync(file,html);
 }
 fs.writeFileSync(path.join(dest,'.nojekyll'),'');
