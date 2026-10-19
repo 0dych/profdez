@@ -6488,232 +6488,8 @@ body:has(.form-control:focus) .speed-dial-wrapper { visibility: hidden; pointer-
   display: none !important;
 }
 
-@media print {
-  /* Hide all site framing, hero, header, footer, popups, and non-printable tools */
-  .topbar,
-  .site-header,
-  .services-hero-section,
-  .page-hero-section,
-  .hero-section,
-  .page-header,
-  .site-footer,
-  .speed-dial-wrapper,
-  .modal-backdrop,
-  .cert-modal-backdrop,
-  .instructions-nav,
-  .instruction-tools,
-  .btn,
-  .toast,
-  #siteToast,
-  .cases-bg-glow,
-  .cases-glow-line {
-    display: none !important;
-  }
+/* Note: Full @media print styles are located at the end of this file for maximum cascade priority */
 
-  body {
-    background: #FFFFFF !important;
-    color: #0F172A !important;
-    font-size: 10pt !important;
-    line-height: 1.45 !important;
-    margin: 0 !important;
-    padding: 1.2cm 1.2cm !important;
-    box-sizing: border-box !important;
-  }
-
-  /* Suppress automatic link URL / path insertion */
-  a[href]:after,
-  a:after {
-    content: none !important;
-  }
-
-  .section-padding {
-    padding: 0 !important;
-  }
-
-  .container {
-    max-width: 100% !important;
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  .instructions-container {
-    max-width: 100% !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-shadow: none !important;
-    border: none !important;
-    background: transparent !important;
-  }
-
-  .instructions-content-panel {
-    display: block !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-  }
-
-  /* Show only the print letterhead at the top */
-  .instructions-print-header {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    padding-bottom: 0.85rem;
-    margin-bottom: 1.25rem;
-    border-bottom: 2px solid #0F172A !important;
-  }
-
-  .print-header-brand {
-    display: flex !important;
-    align-items: center;
-    gap: 0.85rem;
-    background: transparent !important;
-    box-shadow: none !important;
-    filter: none !important;
-  }
-
-  .print-logo-img {
-    width: 48px !important;
-    height: 48px !important;
-    object-fit: contain !important;
-    border-radius: 50% !important;
-    clip-path: circle(50% at center) !important;
-    -webkit-clip-path: circle(50% at center) !important;
-    background: transparent !important;
-    background-color: transparent !important;
-    box-shadow: none !important;
-    -webkit-box-shadow: none !important;
-    filter: none !important;
-    -webkit-filter: none !important;
-    mix-blend-mode: normal !important;
-    border: none !important;
-    outline: none !important;
-  }
-
-  .print-brand-info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .print-company-name {
-    font-size: 1.15rem;
-    font-weight: 800;
-    color: #0F172A;
-    letter-spacing: -0.01em;
-  }
-
-  .print-company-sub {
-    font-size: 0.76rem;
-    color: #475569;
-    margin-top: 0.15rem;
-  }
-
-  .print-header-contacts {
-    text-align: right;
-    font-size: 0.82rem;
-    color: #334155;
-    line-height: 1.4;
-  }
-
-  .print-header-contacts strong {
-    color: #0F172A;
-  }
-
-  /* Only active tab is printed, all others are hidden */
-  .instruction-block {
-    display: none !important;
-  }
-
-  .instruction-block.active {
-    display: block !important;
-    animation: none !important;
-  }
-
-  .instruction-title {
-    font-size: 1.35rem !important;
-    color: #0F172A !important;
-    margin-top: 0 !important;
-    margin-bottom: 0.5rem !important;
-    break-after: avoid;
-    page-break-after: avoid;
-  }
-
-  .instruction-lead {
-    font-size: 0.92rem !important;
-    color: #334155 !important;
-    margin-bottom: 1rem !important;
-    line-height: 1.45 !important;
-  }
-
-  /* Checklists formatted cleanly for print */
-  .instructions-content-panel .checklist-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 1rem !important;
-  }
-
-  .instructions-content-panel .checklist-card {
-    page-break-inside: avoid;
-    break-inside: avoid;
-    border: 1px solid #94A3B8 !important;
-    border-radius: 8px !important;
-    box-shadow: none !important;
-    padding: 0.85rem !important;
-    background: #FFFFFF !important;
-    margin-bottom: 0.75rem !important;
-  }
-
-  .checklist-header {
-    margin-bottom: 0.5rem !important;
-  }
-
-  .checklist-header-title {
-    font-size: 0.95rem !important;
-    color: #0F172A !important;
-  }
-
-  .checklist-item {
-    font-size: 0.84rem !important;
-    line-height: 1.35 !important;
-    margin-bottom: 0.45rem !important;
-  }
-
-  .checklist-bullet {
-    width: 18px !important;
-    height: 18px !important;
-    font-size: 0.7rem !important;
-  }
-
-  /* All detail elements inside instructions must stay expanded */
-  details {
-    display: block !important;
-  }
-
-  details > summary {
-    display: block !important;
-    font-weight: 700 !important;
-  }
-
-  details[open] > summary {
-    margin-bottom: 0.35rem;
-  }
-
-  h2, h3, h4 {
-    page-break-after: avoid;
-    break-after: avoid;
-  }
-
-  @page {
-    margin: 0;
-    size: A4 portrait;
-  }
-}
 
 
 /* ==========================================================================
@@ -8812,8 +8588,7 @@ body:has(.form-control:focus) .speed-dial-wrapper { visibility: hidden; pointer-
 .service-extra-gallery img { width: 100%; height: 220px; object-fit: cover; border-radius: 12px; }
 .service-extra-gallery figcaption { margin-top: .5rem; color: var(--text-muted); font-size: .9rem; }
 
-.product-stock-status { margin: 0 auto 0 0.25rem; color: #059669; font-size: 0.78rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem; }
-.product-stock-status::before { content: '●'; font-size: 0.55rem; color: #10B981; }
+.product-stock-status { display: none !important; }
 
 .product-photo-gallery { position: relative !important; }
 .product-photo-gallery .product-img:not(:first-of-type) { display: none !important; }
@@ -9239,5 +9014,432 @@ body:has(.form-control:focus) .speed-dial-wrapper { visibility: hidden; pointer-
     flex: 0 0 36px;
   }
 }
+
+/* ==========================================================================
+   OFFICIAL A4 PRINT STYLESHEET (instructions.html)
+   Placed at the end of the stylesheet to ensure absolute cascade priority
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 14mm;
+  }
+
+  *, *::before, *::after {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  html, body {
+    background: #FFFFFF !important;
+    color: #0F172A !important;
+    font-size: 9.5pt !important;
+    line-height: 1.45 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Suppress automatic link URL / pseudo-content */
+  a[href]:after,
+  a:after {
+    content: none !important;
+  }
+
+  /* Hide all site framing, nav, popups, dials, and interactive tools */
+  .topbar,
+  .site-header,
+  .services-hero-section,
+  .page-hero-section,
+  .hero-section,
+  .page-header,
+  .site-footer,
+  .speed-dial-wrapper,
+  .modal-backdrop,
+  .cert-modal-backdrop,
+  .instructions-nav,
+  .instruction-tools,
+  .btn,
+  .toast,
+  #siteToast,
+  .cases-bg-glow,
+  .cases-glow-line,
+  .scroll-top-btn,
+  #scrollTopBtn,
+  .product-lightbox,
+  .haccp-ambient-glow {
+    display: none !important;
+  }
+
+  .section-padding {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .container,
+  .instructions-container,
+  .instructions-content-panel {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* Print Letterhead: clean, crisp, zero halo */
+  .instructions-print-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 1.25rem !important;
+    padding-bottom: 0.75rem !important;
+    margin-bottom: 1.15rem !important;
+    border-bottom: 2px solid #0F172A !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .print-header-brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.85rem !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  .print-logo-img {
+    width: 48px !important;
+    height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
+    object-fit: contain !important;
+    border-radius: 0 !important;
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+    background: #FFFFFF !important;
+    background-color: #FFFFFF !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+    mix-blend-mode: normal !important;
+    border: none !important;
+    outline: none !important;
+  }
+
+  .print-brand-info {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .print-company-name {
+    font-size: 1.12rem !important;
+    font-weight: 800 !important;
+    color: #0F172A !important;
+    letter-spacing: -0.01em !important;
+    line-height: 1.2 !important;
+  }
+
+  .print-company-sub {
+    font-size: 0.75rem !important;
+    color: #475569 !important;
+    margin-top: 0.2rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .print-header-contacts {
+    text-align: right !important;
+    font-size: 0.8rem !important;
+    color: #334155 !important;
+    line-height: 1.4 !important;
+    flex-shrink: 0 !important;
+  }
+
+  .print-header-contacts strong {
+    color: #0F172A !important;
+  }
+
+  /* Only active tab is printed, all others are hidden */
+  .instruction-block {
+    display: none !important;
+  }
+
+  .instruction-block.active {
+    display: block !important;
+    animation: none !important;
+  }
+
+  .instruction-title {
+    font-size: 1.3rem !important;
+    font-weight: 800 !important;
+    color: #0F172A !important;
+    margin: 0 0 0.45rem 0 !important;
+    line-height: 1.3 !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .instruction-lead {
+    font-size: 0.92rem !important;
+    color: #334155 !important;
+    margin: 0 0 1rem 0 !important;
+    padding-bottom: 0.75rem !important;
+    border-bottom: 1px solid #CBD5E1 !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Checklists (Tab 1 #full-prep): 2 balanced columns, aligned borders & items */
+  .instructions-content-panel .checklist-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.85rem !important;
+    margin: 0 0 0.85rem 0 !important;
+    align-items: stretch !important;
+  }
+
+  .instructions-content-panel .checklist-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    border: 1px solid #94A3B8 !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    padding: 0.75rem 0.85rem !important;
+    background: #FFFFFF !important;
+    margin: 0 !important;
+    height: 100% !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .instructions-content-panel .checklist-card.card-danger {
+    border-top: 4px solid var(--brand-red) !important;
+  }
+
+  .instructions-content-panel .checklist-card.card-success {
+    border-top: 4px solid #059669 !important;
+  }
+
+  .checklist-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.45rem !important;
+    margin-bottom: 0.55rem !important;
+    padding-bottom: 0.45rem !important;
+    border-bottom: 1px solid #E2E8F0 !important;
+  }
+
+  .checklist-header > span {
+    font-size: 1.1rem !important;
+    line-height: 1 !important;
+  }
+
+  .checklist-header-title {
+    font-size: 0.92rem !important;
+    font-weight: 800 !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .checklist-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.45rem !important;
+  }
+
+  .checklist-item {
+    font-size: 0.82rem !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+    color: #1E293B !important;
+  }
+
+  .checklist-bullet {
+    width: 17px !important;
+    height: 17px !important;
+    min-width: 17px !important;
+    border-radius: 4px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.68rem !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    margin-top: 1px !important;
+    border: 1px solid currentColor !important;
+    background: transparent !important;
+  }
+
+  .alert-box {
+    margin: 0.85rem 0 0 0 !important;
+    padding: 0.7rem 0.95rem !important;
+    border: 1px solid #94A3B8 !important;
+    border-left: 4px solid var(--brand-red) !important;
+    border-radius: 6px !important;
+    background: #FFF1F2 !important;
+    color: #881337 !important;
+    font-size: 8.5pt !important;
+    line-height: 1.4 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Instruction Sections (Tab 2 #full-patron & Tab 3 #full-ozone) */
+  .instruction-section {
+    margin-bottom: 0.85rem !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .instruction-heading {
+    font-size: 10pt !important;
+    font-weight: 800 !important;
+    color: #0F172A !important;
+    margin: 0 0 0.35rem 0 !important;
+    line-height: 1.3 !important;
+  }
+
+  .instruction-section p {
+    font-size: 9pt !important;
+    line-height: 1.45 !important;
+    color: #334155 !important;
+    margin: 0 0 0.4rem 0 !important;
+  }
+
+  .instruction-list {
+    padding-left: 0 !important;
+    margin: 0 0 0.5rem 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.4rem !important;
+    list-style: none !important;
+  }
+
+  .instruction-list li {
+    padding-left: 1.2rem !important;
+    margin-bottom: 0 !important;
+    font-size: 9pt !important;
+    line-height: 1.4 !important;
+    color: #1E293B !important;
+    position: relative !important;
+  }
+
+  .instruction-list li::before {
+    content: '•' !important;
+    position: absolute !important;
+    left: 0.2rem !important;
+    top: -2px !important;
+    font-size: 1.1rem !important;
+    color: #0F172A !important;
+  }
+
+  /* FAQ Cards (Tab 4 #full-faq) */
+  #full-faq .section-header {
+    margin-bottom: 1rem !important;
+    text-align: left !important;
+  }
+
+  #full-faq .section-tag {
+    display: none !important;
+  }
+
+  #full-faq .section-title {
+    font-size: 1.25rem !important;
+    color: #0F172A !important;
+    margin: 0 0 0.35rem 0 !important;
+  }
+
+  #full-faq .section-subtitle {
+    font-size: 0.88rem !important;
+    color: #475569 !important;
+    margin: 0 0 0.85rem 0 !important;
+    padding-bottom: 0.65rem !important;
+    border-bottom: 1px solid #CBD5E1 !important;
+  }
+
+  .faq-cards-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .faq-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    border: 1px solid #94A3B8 !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 0.85rem !important;
+    background: #FFFFFF !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .faq-card::before {
+    display: none !important;
+  }
+
+  .faq-card-header {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+    margin-bottom: 0.4rem !important;
+  }
+
+  .faq-card-icon {
+    display: none !important;
+  }
+
+  .faq-card-title {
+    font-size: 0.88rem !important;
+    font-weight: 800 !important;
+    color: #0F172A !important;
+    line-height: 1.3 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+  }
+
+  .faq-card-answer {
+    font-size: 0.8rem !important;
+    color: #334155 !important;
+    line-height: 1.4 !important;
+    padding-left: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* All detail elements inside instructions must stay expanded */
+  details {
+    display: block !important;
+  }
+
+  details > summary {
+    display: block !important;
+    font-weight: 700 !important;
+  }
+
+  details[open] > summary {
+    margin-bottom: 0.35rem !important;
+  }
+
+  h2, h3, h4 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+}
+
 
 

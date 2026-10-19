@@ -257,10 +257,8 @@ function applyCatalogCards(data) {
     const features = card.querySelector('.product-features');
     const price = card.querySelector('.product-price');
     const orderButton = card.querySelector('[data-open-modal]');
-    if (badge) badge.textContent = product.badge || '';
-    let status=card.querySelector('.product-stock-status');
-    if(!status){status=document.createElement('p');status.className='product-stock-status';card.querySelector('.product-price')?.after(status);}
-    status.textContent=product.status || ''; status.hidden=!product.status;
+    const status = card.querySelector('.product-stock-status');
+    if (status) status.remove();
     if (title) title.textContent = product.title || '';
     if (description) description.textContent = product.shortDesc || '';
     if (price) price.textContent = product.price || 'За запитом';
